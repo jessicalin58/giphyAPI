@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Animal Gifs</title>
+</head>
+<style>
+
+img {
+
+  height: 20%;
+  width: 20%;
+}
+
+</style>
+
+<body>
+  <div id="buttons">
+    <button data-animal="cat">
+      cat
+    </button>
+    <button data-animal="dog" >
+      dog
+    </button>
+  
+    <button data-animal="frog"> 
+    frog
+    </button>
+
+    <button data-animal="rat"> 
+    rat
+    </button>
+
+    <button data-animal="penguin" > 
+    penguin
+    </button>
+
+
+    <button data-animal="raccoon"> 
+    raccoon
+    </button>
+
+
+  </div>
+
+  <div id="gifs-appear-here">
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    $("button").on("click", function() {
+      var topics = $(this).attr("data-animal");
+      var queryURL = "http://api.giphy.com/v1/gifs/search?q=" +
+        topics + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+      $.ajax({
+          url: queryURL,
+          method: "GET"
+        })
+        .done(function(response) {
+          var results = response.data;
+
+          for (var i = 0; i < results.length; i++) {
+            var gifDiv = $("<div class='item'>");
+
+            var rating = results[i].rating;
+
+            //var animated = results[i].images.fixed_height.url;
+           
+            //var animated = results[i].images.fixed_height.url;
+
+            //var state = results[i].images.original_still.url;
+
+            var p = $("<p>").text("Rating: " + rating);
+            //var p = $("<p>").text("State: " + state);
+
+            var animalImage = $("<img>");
+            
+            animalImage.attr("data-still", results[i].images.original_still.url);
+            animalImage.attr("data-live", results[i].images.fixed_height.url);
+            
+            animalImage.attr("data-active", "still");
+
+            animalImage.attr("src", results[i].images.original_still.url);
+
+            gifDiv.prepend(p);
+            gifDiv.prepend(animalImage);
+
+            $("#gifs-appear-here").prepend(gifDiv);
+
+            //console.log(response);
+
+
+
+
+        //ANIMATION FUNCTION
+
+        $(animalImage).on("click", function(){
+            
+            if (animalImage === "live") {
+            console.log("innactive");
+            $(this).attr("src", $(this).attr("data-still"));
+            $(this).attr("data-active", "still");
+          } else {
+            console.log("active");
+            $(this).attr("src", $(this).attr("data-live"));
+            $(this).attr("data-active", "live");
+          }
+
+
+        });
+
+
+//
+          }
+
+
+        });
+
+
+
+
+    });
+
+
+
+  </script>
+</body>
+
+</html>
